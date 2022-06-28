@@ -10,7 +10,7 @@ export function extractMatrix(message: string): string | undefined {
 }
 
 export function extractAttempts(message: String): number | undefined {
-    let regex = /[0-6][/]/
+    let regex = /[1-6|X][/]/;
     let regexMatch = message.match(regex);
 
     if (regexMatch === null) {
@@ -21,6 +21,10 @@ export function extractAttempts(message: String): number | undefined {
 
     if (attempt === undefined) {
         return undefined;
+    }
+
+    if (attempt === "X") {
+        return 7; 
     }
 
     if (isNaN(parseInt(attempt))) {
