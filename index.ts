@@ -6,6 +6,8 @@ import isWordleMessage from "./src/Utils/WordleMessageRegex";
 
 // Command imports
 import wordleMessage from "./src/Commands/WordleMessage";
+import { userStats } from "./src/Commands/Stats";
+
 
 const client = new Discord.Client({ 
     partials: ["MESSAGE", "CHANNEL", "REACTION"], 
@@ -22,7 +24,13 @@ client.on("interactionCreate", async (interaction: Discord.Interaction): Promise
         return;
     }
 
-    
+    const commandSent = interaction.commandName;
+    const commandArgs = interaction.options;
+
+    if (commandSent === "wstats") {
+        let stats = await userStats(interaction.user.id);
+        interaction.reply(stats);
+    }
 
 });
 

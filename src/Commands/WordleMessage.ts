@@ -2,7 +2,7 @@
 import { User } from "discord.js";
 
 // Types imports
-import { BoxCount } from "../Types/types"
+import { BoxCount, DatabaseResponse } from "../Types/types"
 
 // Utils imports
 import { reconstructMatrix } from "../Utils/CleanEmojis";
@@ -14,41 +14,40 @@ import insertUser from "../Database/InsertUser";
 import addGameToDB from "../Database/AddGameToDB";
 
 async function wordleMessage(message: string, user: User): Promise<string> {
-    let day = extractDay(message);
-    let attempts = extractAttempts(message);
-    let matrix = extractMatrix(message);
+    // Use utility functions that use REGEX to extract a substring
+    let day = extractDay(message); // Extracts the day of the wordle
+    let attempts = extractAttempts(message); // Extracts the number of guesses
+    let matrix = extractMatrix(message); // Extracts the game board
 
     if (day === undefined || attempts === undefined || matrix === undefined) {
         return "Invalid Wordle read";
     }
 
     // Confirm the score (Regex doesn't cover Matrix counting)
-
     let cleanMatrix = reconstructMatrix(matrix); // Replaces emojis with characters
 
-    let boxCount = getBoxCount(cleanMatrix); 
+    let boxCount: BoxCount= getBoxCount(cleanMatrix); // Count the number of boxes in a matrix
 
-    let boxCountTotal = (): number => boxCount.green + boxCount.yellow + boxCount.black;
-
-    if (boxCountTotal() != (attempts * 5)) {
+    if (boxCount.total() != (attempts * 5)) {
         // If the number of boxes do not match the attempts, then the matrix/board is invalid
         return "Invalid game board";
     }
 
     // Then check if user exists
-    let doesUserExist = await getUserData(user.id);
+    const doesUserExist: DatabaseResponse = await getUserData(user.id);
+    
     if (doesUserExist.success === false && doesUserExist.data === null) {
         // Register the user, if the user isn't in the database
-        let insertUserResponse = await insertUser(user.id, 0);
+        const insertUserResponse: DatabaseResponse = await insertUser(user.id, 0);
         if (insertUserResponse.success === false) {
-            return "Could not save wordle game. User not registered.";
+            return "Could not save wordle game.";
         }
     }
 
-    let addGameResponse = await addGameToDB(user.id, day, attempts, boxCount.green, boxCount.yellow, boxCount.black);
+    const addGameResponse: DatabaseResponse = await addGameToDB(user.id, day, attempts, boxCount.green, boxCount.yellow, boxCount.black);
 
     if (addGameResponse.success === false) {
-        return "Could not save wordle game";
+        return "Could not save wordle game.";
     }
 
     return "Wordle saved!";

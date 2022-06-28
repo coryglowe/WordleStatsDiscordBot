@@ -4,7 +4,7 @@ When a user shares their daily Wordle, the bot will save the information.
 
 Users can also show off their stats using a command and view leaderboards (Work in progress)
 
-Required Permissions ID: 2147862592
+Required Permissions ID: 346176
 
 ## Database
 Image generated from <a href="dbdiagram.io">dbdiagram.io</a>
