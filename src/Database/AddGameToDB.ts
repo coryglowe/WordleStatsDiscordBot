@@ -7,18 +7,12 @@ import { DatabaseResponse } from "../Types/types"
 // Util imports
 import { ProgramErrors, ProgramMessages } from "../Utils/ProgramMessages";
 
-// userID is not checked if it doesn't exist
-async function addGameToDB(userID: string, day: number, attempts: number, green_count: number, yellow_count: number, black_count: number): Promise<DatabaseResponse>  {
-    let dbConn = await databaseConnection();
 
-    if (dbConn === undefined) {
-        return new DatabaseResponse(false, ProgramErrors.DatabaseConnection, null);
-    }
+async function addGameToDB(userID: string, day: number, attempts: number, green_count: number, yellow_count: number, black_count: number): Promise<DatabaseResponse>  {
+    const dbConn = databaseConnection();
 
     try {
-        let queryString: string = "";
-
-        // First add game_id into "games table" if it doesn't exist
+        let queryString = ""; // First add game_id into "games table" if it doesn't exist
         queryString = `SELECT * FROM games WHERE game_id=${day};`
         let queryResult: any = await dbConn.query(queryString);
 

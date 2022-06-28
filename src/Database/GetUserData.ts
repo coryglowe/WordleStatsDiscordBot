@@ -8,23 +8,19 @@ import { DatabaseResponse } from "../Types/types"
 import { ProgramMessages } from "../Utils/ProgramMessages";
 
 async function getUserData(userID: string): Promise<DatabaseResponse> {
-    let dbConn = await databaseConnection();
-
-    if (dbConn === undefined) {
-        return new DatabaseResponse(false, "Error: could not establish database connection", null);
-    }
+    const dbConn = databaseConnection();
 
     try {
-        let queryString = `SELECT * FROM users WHERE user_id="${userID}";`;
+        const queryString = `SELECT * FROM users WHERE user_id="${userID}";`;
 
-        let queryResult: any = await dbConn.query(queryString);
+        const queryResult: any = await dbConn.query(queryString);
 
         if (queryResult[0].length < 1) {
-            return new DatabaseResponse(false, "Error: user_id does not exist", null);
+            return new DatabaseResponse(true, ProgramMessages.NoResultsFound, null);
         }
 
         // queryResult[0][0] returns the object of the array, not the entire array
-        return new DatabaseResponse(true, ProgramMessages.ResultsFound,queryResult[0][0]);
+        return new DatabaseResponse(true, ProgramMessages.ResultsFound, queryResult[0][0]);
     } catch (err) {
         console.log("There was an error obtaining user data (GetUserData.ts)");
         console.log(err);
