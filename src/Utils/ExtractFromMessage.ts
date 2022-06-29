@@ -1,5 +1,5 @@
 export function extractMatrix(message: string): string | undefined {
-    const regex = /([🟩|⬛|🟨]+[\n]?)+/;
+    const regex = /([🟩|⬛|🟨|⬜]+[\n]?)+/;
     let regexMatch = message.match(regex);
 
     if (regexMatch === null) {

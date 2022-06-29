@@ -25,7 +25,9 @@ export function reconstructMatrix(matrix: string): string {
                     break;
             }
             
-        } else if (currentCharCode === 11035) {
+        } else if (currentCharCode === 11035 || currentCharCode === 11036) { 
+            // 11035 == black box emoji
+            // 11036 == white box emoji
             cleanString+= "B"; // Black
         } else {
             // console.log("Unknown char code not 55357 (green/yellow) or 11035 (black): ", currentCharCode);
