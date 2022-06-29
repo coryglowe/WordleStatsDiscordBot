@@ -26,7 +26,7 @@ async function wordleMessage(message: string, user: User): Promise<string> {
     // Confirm the score (Regex doesn't cover Matrix counting)
     let cleanMatrix = reconstructMatrix(matrix); // Replaces emojis with characters
 
-    let boxCount: BoxCount= getBoxCount(cleanMatrix); // Count the number of boxes in a matrix
+    let boxCount: BoxCount= countBoxes(cleanMatrix); // Count the number of boxes in a matrix
 
     if (boxCount.total() != (attempts * 5)) {
         // If the number of boxes do not match the attempts, then the matrix/board is invalid
@@ -53,7 +53,7 @@ async function wordleMessage(message: string, user: User): Promise<string> {
     return "Wordle saved!";
 }
 
-function getBoxCount(matrix: string): BoxCount {
+function countBoxes(matrix: string): BoxCount {
     let boxCount = new BoxCount();
     for (let i = 0; i < matrix.length; i++) {
         switch (matrix[i]) {
@@ -68,6 +68,8 @@ function getBoxCount(matrix: string): BoxCount {
             case "Y":
                 boxCount.yellow++;
                 break;
+
+            
 
             default:
                 // console.log("Unknown character counted");
