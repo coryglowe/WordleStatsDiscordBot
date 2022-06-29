@@ -12,14 +12,18 @@ export async function userStats(userID: string): Promise<string> {
     }
 
     // let streak: number = dbRes.data.steak;
-    let userBoxCount: BoxCount = await getUserTotalBoxCount(userID);
+    let userBoxCount = await getUserTotalBoxCount(userID);
 
     let avg_attempts = await getAvgUserAttempts(userID);
 
+    if (avg_attempts === null) {
+        avg_attempts = 0;
+    }
+
     let statsMessage: Array<string> = [
-        `**Stats for:** <@${userID}>`,
+        `**Stats for:** <${userID}>`,
         `\n**Average Tries:** ${avg_attempts}`,
-        `\n**Letter Accuracy:** ${calculateAccuracy(userBoxCount)}`
+        `\n**Letter Accuracy:** ${userBoxCount === null ? 0 : calculateAccuracy(userBoxCount)}`
     ];
 
     let message: string = "";
@@ -33,5 +37,5 @@ export async function userStats(userID: string): Promise<string> {
 function calculateAccuracy(boxCount: BoxCount): string {
     let accuracy: number = (boxCount.green + boxCount.yellow) / boxCount.total();
     accuracy *= 100;
-    return `${accuracy}%`;
+    return `${accuracy.toFixed(2)}%`; // Round two two decimals
 }

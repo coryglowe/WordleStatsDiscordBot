@@ -1,6 +1,6 @@
 import Discord, { Message } from "discord.js"
 
-import DiscordConfig from "./src/configs/discord-config.json"
+import { token } from "./src/configs/discord-config.json"
 
 import isWordleMessage from "./src/Utils/WordleMessageRegex";
 
@@ -28,7 +28,31 @@ client.on("interactionCreate", async (interaction: Discord.Interaction): Promise
     const commandArgs = interaction.options;
 
     if (commandSent === "wstats") {
-        let stats = await userStats(interaction.user.id);
+        let stats: string = "";
+        
+        if (commandArgs.data.length === 0) {
+            stats = await userStats(interaction.user.id);
+        } else {
+            // Do regex matching for ping <@[0-9]+>
+            let optionParam: string | number | boolean | undefined = commandArgs.data[0].value;
+
+            if (optionParam === undefined || typeof optionParam !== "string") {
+                interaction.reply("Invalid user");
+                return;
+            }
+
+            const regex = /^[<][@][!][0-9]+[>]$/;
+
+            if (!regex.test(<string>optionParam)) {
+                interaction.reply("Invalid user");
+                return;
+            }
+
+            let userID: string = optionParam.match(/[0-9]+/)![0]; // There are already numbers in here from regex test above
+
+            // Note: userID is a string of numbers
+            stats = await userStats(userID);
+        }
         interaction.reply(stats);
     }
 
@@ -45,9 +69,9 @@ client.on("messageCreate", async (message: Discord.Message): Promise<void> => {
     }
 
     let user: Discord.User = message.author;
-    let response = await wordleMessage(message.content, user);
+    let response = await wordleMessage(message.content, user.id);
     
     message.reply(response);
 });
 
-client.login(DiscordConfig.token);
+client.login(token);
