@@ -13,7 +13,7 @@ import getUserData from "../Database/GetUserData";
 import insertUser from "../Database/InsertUser";
 import addGameToDB from "../Database/AddGameToDB";
 
-async function wordleMessage(message: string, user: User): Promise<string> {
+async function wordleMessage(message: string, userID: string): Promise<string> {
     // Use utility functions that use REGEX to extract a substring
     let day = extractDay(message); // Extracts the day of the wordle
     let attempts = extractAttempts(message); // Extracts the number of guesses
@@ -26,25 +26,25 @@ async function wordleMessage(message: string, user: User): Promise<string> {
     // Confirm the score (Regex doesn't cover Matrix counting)
     let cleanMatrix = reconstructMatrix(matrix); // Replaces emojis with characters
 
-    let boxCount: BoxCount= countBoxes(cleanMatrix); // Count the number of boxes in a matrix
+    let boxCount: BoxCount = countBoxes(cleanMatrix); // Count the number of boxes in a matrix
 
-    if (boxCount.total() != (attempts * 5)) {
+    if (boxCount.total() != ((attempts === 7 ? attempts - 1 : attempts) * 5)) {
         // If the number of boxes do not match the attempts, then the matrix/board is invalid
         return "Invalid game board";
     }
 
     // Then check if user exists
-    const doesUserExist: DatabaseResponse = await getUserData(user.id);
+    const doesUserExist: DatabaseResponse = await getUserData(userID);
     
     if (doesUserExist.success === false && doesUserExist.data === null) {
         // Register the user, if the user isn't in the database
-        const insertUserResponse: DatabaseResponse = await insertUser(user.id, 0);
+        const insertUserResponse: DatabaseResponse = await insertUser(userID, 0);
         if (insertUserResponse.success === false) {
             return "Could not save wordle game.";
         }
     }
 
-    const addGameResponse: DatabaseResponse = await addGameToDB(user.id, day, attempts, boxCount.green, boxCount.yellow, boxCount.black);
+    const addGameResponse: DatabaseResponse = await addGameToDB(userID, day, attempts, boxCount.green, boxCount.yellow, boxCount.black);
 
     if (addGameResponse.success === false) {
         return "Could not save wordle game.";
@@ -68,8 +68,6 @@ function countBoxes(matrix: string): BoxCount {
             case "Y":
                 boxCount.yellow++;
                 break;
-
-            
 
             default:
                 // console.log("Unknown character counted");

@@ -1,6 +1,6 @@
 // Takes the matrix and replaces emojis with the color of the character
 export function reconstructMatrix(matrix: string): string {
-    matrix = matrix.replace(/[\n]/g, ""); // Remove new line characters
+    matrix = matrix.replace(/[\n ]/g, ""); // Remove new line characters or white space characters
     let cleanString = "";
     for (let i = 0; i < matrix.length; i++) {
         let currentCharCode = matrix.charCodeAt(i);
