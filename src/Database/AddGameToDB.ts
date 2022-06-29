@@ -9,7 +9,11 @@ import { ProgramErrors, ProgramMessages } from "../Utils/ProgramMessages";
 
 
 async function addGameToDB(userID: string, day: number, attempts: number, green_count: number, yellow_count: number, black_count: number): Promise<DatabaseResponse>  {
-    const dbConn = databaseConnection();
+    const dbConn = await databaseConnection();
+
+    if (dbConn === undefined) {
+        return new DatabaseResponse(false, ProgramErrors.DatabaseConnection, null);
+    }
 
     try {
         let queryString = ""; // First add game_id into "games table" if it doesn't exist
@@ -23,14 +27,19 @@ async function addGameToDB(userID: string, day: number, attempts: number, green_
 
         queryString = `INSERT INTO played (user_id, game_id, attempts, green_count, yellow_count, black_count) VALUES("${userID}", ${day}, ${attempts}, ${green_count}, ${yellow_count}, ${black_count});`;
         queryResult = await dbConn.query(queryString);
-        
+        dbConn.release();
+
         if (queryResult[0].length < 1) {
             return new DatabaseResponse(false, ProgramMessages.NoResultsFound, null);
         }
 
         return new DatabaseResponse(true, ProgramMessages.ResourceCreated_Success, null);
-    } catch (err) {
-        console.log("Error adding played game into database (AddGameToDB.ts)");
+    } catch (err: any) {
+        console.log(err.sqlMessage);
+        console.log("(AddGameToDB.ts)");
+
+        dbConn.release();
+
         return new DatabaseResponse(false, ProgramErrors.DatabaseQuery, null);
     }
 }

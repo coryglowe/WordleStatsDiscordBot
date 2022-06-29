@@ -5,15 +5,20 @@ import databaseConnection from "./DatabaseConnection";
 import { DatabaseResponse } from "../Types/types"
 
 // Util imports
-import { ProgramMessages } from "../Utils/ProgramMessages";
+import { ProgramErrors, ProgramMessages } from "../Utils/ProgramMessages";
 
 async function getUserData(userID: string): Promise<DatabaseResponse> {
-    const dbConn = databaseConnection();
+    const dbConn = await databaseConnection();
+
+    if (dbConn === undefined) {
+        return new DatabaseResponse(false, ProgramErrors.DatabaseConnection, null);
+    }
 
     try {
         const queryString = `SELECT * FROM users WHERE user_id="${userID}";`;
 
         const queryResult: any = await dbConn.query(queryString);
+        dbConn.release();
 
         if (queryResult[0].length < 1) {
             return new DatabaseResponse(true, ProgramMessages.NoResultsFound, null);
@@ -21,9 +26,12 @@ async function getUserData(userID: string): Promise<DatabaseResponse> {
 
         // queryResult[0][0] returns the object of the array, not the entire array
         return new DatabaseResponse(true, ProgramMessages.ResultsFound, queryResult[0][0]);
-    } catch (err) {
-        console.log("There was an error obtaining user data (GetUserData.ts)");
-        console.log(err);
+    } catch (err: any) {
+        console.log(err.sqlMessage);
+        console.log("(GetUserData.ts)");
+        
+        dbConn.release();
+        
         return new DatabaseResponse(true, "Query error", null);
     }
 }
