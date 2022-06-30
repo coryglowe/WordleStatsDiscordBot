@@ -30,9 +30,9 @@ export class BoxCount {
 
 
 export class DatabaseResponse {
-    success: boolean;
-    message: string;
-    data: any;
+    readonly success: boolean;
+    readonly message: string;
+    readonly data: any;
     constructor(success: boolean, message: string = "", data: any = null) {
         this.success = success;
         this.message = message;
