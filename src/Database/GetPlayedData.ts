@@ -69,10 +69,20 @@ export async function getUserTotalBoxCount(userID: string): Promise <BoxCount | 
 
 export async function getAvgUserAttempts(userID: string): Promise<number | null> {
     let queryData: DatabaseResponse = await getPlayedData(`SELECT AVG(attempts) FROM played WHERE user_id="${userID}"`);
-    return queryData.data[0]["AVG(attempts)"];
+    // parse int as result from database return string by default
+    return parseInt(queryData.data[0]["AVG(attempts)"]);
 }
 
 export async function getAvgGameAttempts(gameID: number): Promise<number | null> {
     let queryData: DatabaseResponse = await getPlayedData(`SELECT AVG(attempts) FROM played WHERE game_id=${gameID}`);
-    return queryData.data[0]["AVG(attempts)"];
+    return parseInt(queryData.data[0]["AVG(attempts)"]);
+}
+
+export async function getAllAttempts(userID: string): Promise<Array<number> | null> {
+    let queryData: DatabaseResponse = await getPlayedData(`SELECT attempts FROM played WHERE user_id="${userID}";`);
+    let results: Array<number> = [];
+    queryData.data.forEach((element: any) => {
+        results.push(element["attempts"]);
+    });
+    return results;
 }

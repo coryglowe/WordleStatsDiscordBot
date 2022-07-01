@@ -54,9 +54,25 @@ export class DatabaseResponse {
         if (this.data.isArray()) {
             return this.data.length;
         } else {
-            return 1; // One result was returned from the database 
+            return 1; // One result was returned from the database (not an array)
         }
     }
+
+    dataIsArray(): boolean {
+        if (this.dataExists()) {
+            return false;
+        }
+        
+        return this.data.isArray();
+    }
+}
+
+export interface UserStats {
+    user_id: string;
+    average_attempts: number;
+    letter_accuracy: number;
+    success_rate: number;
+    total_played: number;
 }
 
 
