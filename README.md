@@ -6,10 +6,11 @@ Users can also show off their stats using a command and view leaderboards (Work 
 
 Required Permissions ID: 346176
 
-## Database
-Image generated from <a href="dbdiagram.io">dbdiagram.io</a>
+(TypeScript, Node.js, MySQL)
 
-Code to geenerate database:
+## Database
+Table generated from <a href="dbdiagram.io">dbdiagram.io</a>
+
 ```sql
 Table user as u {
   user_id string [pk, increment]
@@ -35,9 +36,8 @@ Table played as p {
 ![Database image](/Assets/db.png)
 
 
-## Sample Video
-
+## Images & videos
+![img1](/Assets/sc2.png)
 
 https://user-images.githubusercontent.com/73256760/176044911-1ec75be4-2f13-4294-ab04-ee02a2f15e83.mov
-
 
