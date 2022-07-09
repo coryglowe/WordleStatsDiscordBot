@@ -8,7 +8,7 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 
 const wordleBotCommands = [
     new SlashCommandBuilder()
-        .setName("wstats")
+        .setName("wordle-stats")
         .setDescription("View your / another person's wordle statistics")
         .addStringOption(user => user
             .setName("user")
@@ -16,7 +16,7 @@ const wordleBotCommands = [
             .setDescription("@ a user to view their stats")),
 
     new SlashCommandBuilder()
-            .setName("wregister")
+            .setName("wordle-register")
             .setDescription("Register your discord for Wordle tracking"),
 ];
 

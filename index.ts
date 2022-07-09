@@ -28,7 +28,7 @@ client.on("interactionCreate", async (interaction: Discord.Interaction): Promise
     const commandSent = interaction.commandName;
     const commandArgs = interaction.options;
 
-    if (commandSent === "wstats") {
+    if (commandSent === "wordle-stats") {
         let stats: UserStats | undefined;
 
         if (commandArgs.data.length === 0) {
