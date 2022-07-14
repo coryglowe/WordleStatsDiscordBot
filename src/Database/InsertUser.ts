@@ -1,5 +1,5 @@
 // Database imports
-import databaseConnection from "./DatabaseConnection";
+import DatabaseConnection from "./DatabaseConnection";
 
 // Type imports
 import { DatabaseResponse } from "../Types/types";
@@ -9,7 +9,7 @@ import { ProgramErrors, ProgramMessages } from "../Utils/ProgramMessages";
 
 // Function returns false if user was not added into the database
 async function insertUser(userID: string, streak: number): Promise<DatabaseResponse> {
-    const dbConn = await databaseConnection();
+    const dbConn = await DatabaseConnection.start();
 
     if (dbConn === undefined) {
         return new DatabaseResponse(false, ProgramErrors.DatabaseConnection, null);

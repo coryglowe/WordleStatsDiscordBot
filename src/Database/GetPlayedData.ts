@@ -1,5 +1,5 @@
 // Database imports
-import databaseConnection from "./DatabaseConnection";
+import DatabaseConnection from "./DatabaseConnection";
 
 // Type imports
 import { DatabaseResponse, BoxCount } from "../Types/types";
@@ -7,11 +7,12 @@ import { DatabaseResponse, BoxCount } from "../Types/types";
 // Util imports
 import { ProgramErrors, ProgramMessages } from "../Utils/ProgramMessages";
 
+
 // Query data containing game_id and user_id
 
 // Internal function that will query data from played database
 async function getPlayedData(queryString: string): Promise<DatabaseResponse> {
-    const dbConn = await databaseConnection();
+    const dbConn = await DatabaseConnection.start();
 
     if (dbConn === undefined) {
         return new DatabaseResponse(false, ProgramErrors.DatabaseConnection, null);

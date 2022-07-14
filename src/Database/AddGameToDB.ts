@@ -1,5 +1,5 @@
 // Database imports
-import databaseConnection from "./DatabaseConnection";
+import DatabaseConnection from "./DatabaseConnection";
 
 // Type imports
 import { DatabaseResponse } from "../Types/types"
@@ -9,7 +9,7 @@ import { ProgramErrors, ProgramMessages } from "../Utils/ProgramMessages";
 
 
 async function addGameToDB(userID: string, day: number, attempts: number, green_count: number, yellow_count: number, black_count: number): Promise<DatabaseResponse>  {
-    const dbConn = await databaseConnection();
+    const dbConn = await DatabaseConnection.start();
 
     if (dbConn === undefined) {
         return new DatabaseResponse(false, ProgramErrors.DatabaseConnection, null);
