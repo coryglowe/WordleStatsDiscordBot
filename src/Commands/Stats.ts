@@ -47,8 +47,8 @@ export async function statsCommand(interaction: CommandInteraction) {
     }
 
     const messageEmbed = new MessageEmbed()
-        .setColor("DARK_GREY")
-        .setTitle(`Player Wordle Stats`)
+        .setColor("GREEN")
+        .setTitle(`Player Wordle Stats for: ${interaction.user.username}`)
         .addFields(
             { name: "Average tries per game", value: `${stats.average_attempts.toFixed(2)}/6`, inline: true },
             { name: "Success rate", value: `${stats?.success_rate.toFixed(2)}%`, inline: true },
